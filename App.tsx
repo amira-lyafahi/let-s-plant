@@ -3,6 +3,7 @@ import { GameStage, Tool } from './types';
 import ActionButton from './components/ActionButton';
 import TreeStage from './components/TreeStage';
 import ProgressBar from './components/ProgressBar';
+import HandPointer from './components/HandPointer';
 
 let audioCtx: AudioContext | null = null;
 const playSound = (sound: string) => {
@@ -124,7 +125,7 @@ const playSound = (sound: string) => {
   }
 };
 
-const backgroundImage = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNjAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InNreS1ncmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM4N0NFRUI7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQjBEMEU2O3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGlkPSJzdW4tZ3JhZGllbnQiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSIgZng9IjUwJSIgZnk9IjUwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I0ZGRDcwMDtzdG9wLW9wYWNpdHk6MSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGRkE1MDA7c3RvcC1vcGFjaXR5OjAiIC8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9InVybCgjc2t5LWdyYWRpZW50KSIgLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjYwIiBmaWxsPSIjRkZENzAwIiAvPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iODAiIGZpbGw9InVybCgjc3VuLWdyYWRpZW50KSIgLz48cGF0aCBkPSJNIDY1MCwxNTAgYSA0MCw0MCAwIDAsMCA2MCwwIGEgMzAsMzAgMCAwLDAgNTAsMjAgYSA0MCw0MCAwIDAsMCA0MCwtMjAgdiAtNTAgaCAtMTUwIHoiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOSIgLz48cGF0aCBkPSJNIDI1MCwyMDAgYSAzMCwzMCAwIDAsMCA1MCwwIGEgMjUsMjUgMCAwLDAgNDAsMTUgYSAzMCwzMCAwIDAsMCAzMCwtMTUgdiAtNDAgaCAtMTIwIHoiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOCIgLz48cGF0aCBkPSJNIC01MCw2MDAgQyAxNTAsNDUwIDM1MDAsNDUwIDUwMCw2MDAgSCAtNTAgWiIgZmlsbD0iIzkwRUU5MCIgLz48cGF0aCBkPSJNIDMwMCw2MDAgQyA1MDAsNDAwIDcwMCw0MDAgOTAwLDYwMCBIIDMwMCBaIiBmaWxsPSIjM0NCMzcxIiAvPjxwYXRoIGQ9Ik0gLTEwMCw2MDAgQyAyMDAsMzUwIDQwMCwzNTAgNjAwLDYwMCBIIC0xMDAgWiIgZmlsbD0iIzJFOEI1NyIgLz48L3N2Zz4=';
+const backgroundImage = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNjAwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InNreS1ncmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM4N0NFRUI7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojQjBEMEU2O3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGlkPSJzdW4tZ3JhZGllbnQiIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSIgZng9IjUwJSIgZnk9IjUwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I0ZGRDcwMDtzdG9wLW9wYWNpdHk6MSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNGRkE1MDA7c3RvcC1vcGFjaXR5OjAiIC8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHN0eWxlPi5zdW4ge2FuaW1hdGlvbjogc3VuLXB1bHNlIDhzIGVhc2UtaW4tb3V0IGluZmluaXRlIGFsdGVybmF0ZTsgdHJhbnNmb3JtLW9yaWdpbjogMTAwcHggMTAwcHg7fS5jbG91ZCB7IGFuaW1hdGlvbjogY2xvdWQtZHJpZnQgNDBzIGVhc2UtaW4tb3V0IGluZmluaXRlIGFsdGVybmF0ZTt9LmNsb3VkLXNsb3cgeyBhbmltYXRpb246IGNsb3VkLWRyaWZ0LXNsb3cgNjBzIGVhc2UtaW4tb3V0IGluZmluaXRlIGFsdGVybmF0ZTt9QGtleWZyYW1lcyBzdW4tcHVsc2UgeyBmcm9tIHsgdHJhbnNmb3JtOiBzY2FsZSgwLjk4KTsgfSB0byB7IHRyYW5zZm9ybTogc2NhbGUoMS4wNCk7IH0gfUBrZXlmcmFtZXMgY2xvdWQtZHJpZnQgeyBmcm9tIHsgdHJhbnNmb3JtOiB0cmFuc2xhdGVYKC0yMHB4KTsgfSB0byB7IHRyYW5zZm9ybTogdHJhbnNsYXRlWCgyMHB4KTsgfSB9QGtleWZyYW1lcyBjbG91ZC1kcmlmdC1zbG93IHsgZnJvbSB7IHRyYW5zZm9ybTogdHJhbnNsYXRlWCgtMTVweCk7IH0gdG8geyB0cmFuc2Zvcm06IHRyYW5zbGF0ZVgoMTVweCk7IH0gfTwvc3R5bGU+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI2MDAiIGZpbGw9InVybCgjc2t5LWdyYWRpZW50KSIgLz48ZyBjbGFzcz0ic3VuIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjYwIiBmaWxsPSIjRkZENzAwIiAvPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iODAiIGZpbGw9InVybCgjc3VuLWdyYWRpZW50KSIgLz48L2c+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjAwIDE1MikiIGNsYXNzPSJjbG91ZCI+PGNpcmNsZSBjeD0iLTYwIiBjeT0iMCIgcj0iNDAiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOSIvPjxjaXJjbGUgY3g9IjAiIGN5PSIxMCIgcj0iNTAiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOSIvPjxjaXJjbGUgY3g9IjYwIiBjeT0iNSIgcj0iNDAiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOSIvPjxyZWN0IHg9Ii02MCIgeT0iMTAiIHdpZHRoPSIxMjAiIGhlaWdodD0iNDAiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOSIgcng9IjIwIi8+PC9nPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1MCAyMDApIiBjbGFzcz0iY2xvdWQtc2xvdyI+PGNpcmNsZSBjeD0iLTQwIiBjeT0iMCIgcj0iMzAiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOCIvPjxjaXJjbGUgY3g9IjAiIGN5PSI1IiByPSIzNSIgZmlsbD0iI0ZGRkZGRiIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iNDAiIGN5PSIwIiByPSIzMCIgZmlsbD0iI0ZGRkZGRiIgb3BhY2l0eT0iMC44Ii8+PHJlY3QgeD0iLTQwIiB5PSI1IiB3aWR0aD0iODAiIGhlaWdodD0iMzAiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOCIgcng9IjE1Ii8+PC9nPjxwYXRoIGQ9Ik0gLTUwLDYwMCBDIDE1MCw0NTAgMzUwLDQ1MCA1MDAsNjAwIEggLTUwIFoiIGZpbGw9IiM5MEVFOTAiIC8+PHBhdGggZD0iTSAzMDAsNjAwIEMgNTAwLDQwMCA3MDAsNDAwIDkwMCw6MDAgSCAzMDAgWiIgZmlsbD0iIzNDQjM3MSIgLz48cGF0aCBkPSJNIC0xMDAsNjAwIEMgMjAwLDM1MCA0MDAsMzUwIDYwMCw2MDAgSCAtMTAwIFoiIGZpbGw9IiMyRThCNTciIC8+PC9zdmc+';
 
 
 const App: React.FC = () => {
@@ -214,7 +215,7 @@ const App: React.FC = () => {
 
   return (
     <div 
-        className="relative w-screen h-screen overflow-hidden flex flex-col items-center justify-between select-none"
+        className="relative w-screen h-screen overflow-hidden flex items-center justify-center p-4 select-none"
         style={{
             backgroundImage: `url('${backgroundImage}')`,
             backgroundSize: 'cover',
@@ -223,63 +224,70 @@ const App: React.FC = () => {
         }}
     >
       
-      {/* Main Message Area */}
-      <div className="h-24 pt-8 flex items-center justify-center transition-opacity duration-500">
-          <p className={`text-center text-2xl md:text-4xl font-bold transition-transform duration-300 ${isWrong ? 'animate-shake text-red-500' : 'text-gray-800'}`}>
-              {message}
-          </p>
-      </div>
-      
-      {/* Progress Bar Area */}
-      <div className="w-full px-4 md:px-8 z-10 my-2">
-        <ProgressBar progress={progressPercentage} />
-      </div>
-
-      {/* Tree display area */}
-      <div className="flex-grow flex items-end justify-center w-full z-10 pb-4 h-full">
-        <TreeStage stage={stage} />
-      </div>
-
-      {/* Controls */}
-      <div className="w-full bg-green-600/50 backdrop-blur-sm p-4 z-20">
-        <div className="max-w-2xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-            {toolData.map(({ tool, label, emoji }) => (
-                <ActionButton
-                    key={tool}
-                    label={label}
-                    emoji={emoji}
-                    onClick={() => handleToolClick(tool)}
-                    disabled={(stage === GameStage.Harvested && !showCompletionOverlay) || (stage !== tool && !showCompletionOverlay)}
-                    isActive={stage === tool && !showCompletionOverlay}
-                />
-            ))}
+      {/* Game Frame */}
+      <div className="relative w-full h-full max-w-3xl bg-white/40 backdrop-blur-md rounded-3xl border-8 border-yellow-800/60 shadow-2xl flex flex-col items-center justify-between overflow-hidden">
+        
+        {/* Main Message Area */}
+        <div className="h-24 pt-8 flex items-center justify-center transition-opacity duration-500 w-full px-4 mt-4">
+            <p className={`text-center text-2xl md:text-4xl font-bold transition-transform duration-300 ${isWrong ? 'animate-shake text-red-500' : 'text-gray-800'}`} style={{textShadow: '1px 1px 2px rgba(255,255,255,0.7)'}}>
+                {message}
+            </p>
         </div>
-      </div>
-      
-      {/* Completion Overlay */}
-      {showCompletionOverlay && (
-        <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center z-30 animate-fade-in">
-          <div className="text-9xl animate-bounce">🏅</div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mt-4" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.6)'}}>
-            صديق البيئة الصغير
-          </h2>
-          <button 
-            onClick={resetGame}
-            className="mt-8 px-8 py-4 bg-yellow-400 text-gray-800 text-2xl font-bold rounded-full shadow-lg hover:bg-yellow-300 transform hover:scale-105 transition-all"
-          >
-            ازرع مرة أخرى!
-          </button>
+        
+        {/* Progress Bar Area */}
+        <div className="w-full px-4 md:px-8 z-10 my-2">
+          <ProgressBar progress={progressPercentage} />
         </div>
-      )}
-      
-      <a
-        href="https://sites.google.com/view/nuha-pf/%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="absolute bottom-2 inset-x-0 text-center text-xs text-green-900 font-semibold opacity-75 hover:opacity-100 transition-opacity z-40"
-      >
-        تم تطوير التطبيق من قبل منصة النهى الرقمية
-      </a>
+
+        {/* Tree display area */}
+        <div className="flex-grow flex items-end justify-center w-full z-10 pb-4 h-full">
+          <TreeStage stage={stage} />
+        </div>
+
+        {/* Controls */}
+        <div className="w-full bg-green-600/50 backdrop-blur-sm p-4 mb-4 z-20">
+          <div className="max-w-2xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+              {toolData.map(({ tool, label, emoji }) => (
+                  <div key={tool} className="relative">
+                    <ActionButton
+                        label={label}
+                        emoji={emoji}
+                        onClick={() => handleToolClick(tool)}
+                        disabled={(stage === GameStage.Harvested && !showCompletionOverlay) || (stage !== tool && !showCompletionOverlay)}
+                        isActive={stage === tool && !showCompletionOverlay}
+                    />
+                    {tool === Tool.Seed && stage === GameStage.Start && <HandPointer />}
+                  </div>
+              ))}
+          </div>
+        </div>
+        
+        {/* Completion Overlay */}
+        {showCompletionOverlay && (
+          <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center z-30 animate-fade-in">
+            <div className="text-9xl animate-bounce">🏅</div>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mt-4" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.6)'}}>
+              صديق البيئة الصغير
+            </h2>
+            <button 
+              onClick={resetGame}
+              className="mt-8 px-8 py-4 bg-yellow-400 text-gray-800 text-2xl font-bold rounded-full shadow-lg hover:bg-yellow-300 transform hover:scale-105 transition-all"
+            >
+              ازرع مرة أخرى!
+            </button>
+          </div>
+        )}
+        
+        <a
+          href="https://sites.google.com/view/nuha-pf/%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute bottom-2 inset-x-0 text-center text-xs text-green-900 font-semibold opacity-75 hover:opacity-100 transition-opacity z-40"
+        >
+          تم تطوير التطبيق من قبل منصة النهى الرقمية
+        </a>
+
+      </div>
 
       <style>{`
         @keyframes fade-in {
@@ -329,20 +337,13 @@ const App: React.FC = () => {
         .animate-tree-grow {
             animation: tree-grow 1s ease-out;
         }
-
-        @keyframes cloud-drift {
-            from { transform: translateX(-20px); }
-            to { transform: translateX(20px); }
+        
+        @keyframes tap {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(15px) scale(0.95); opacity: 0.8; }
         }
-        .animate-cloud-drift {
-            animation: cloud-drift 20s ease-in-out infinite alternate;
-        }
-        @keyframes cloud-drift-slow {
-            from { transform: translateX(-10px); }
-            to { transform: translateX(10px); }
-        }
-        .animate-cloud-drift-slow {
-            animation: cloud-drift-slow 30s ease-in-out infinite alternate;
+        .animate-tap {
+          animation: tap 1.5s ease-in-out infinite;
         }
 
       `}</style>
